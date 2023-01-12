@@ -17,6 +17,7 @@ for (let i = 0; i < tokensAmount; i++) {
         ]
     });
     client.commands = new Collection();
+    client.musicList = [];
     clients.push(client);
 }
 
