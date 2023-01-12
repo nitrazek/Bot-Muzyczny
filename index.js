@@ -1,17 +1,24 @@
 require('dotenv').config();
 const fs = require('fs');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildVoiceStates,
-        GatewayIntentBits.GuildEmojisAndStickers
-    ]
-});
-client.commands = new Collection();
-require('./handlers/antiCrash.js')(client);
+require('./handlers/antiCrash.js')();
 const ID = require('./config/id.json');
+
+const clients = [];
+const tokensAmount = parseInt(process.env.COUNT);
+for (let i = 0; i < tokensAmount; i++) {
+    const client = new Client({
+        intents: [
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMembers,
+            GatewayIntentBits.GuildPresences,
+            GatewayIntentBits.GuildVoiceStates,
+            GatewayIntentBits.GuildEmojisAndStickers
+        ]
+    });
+    client.commands = new Collection();
+    clients.push(client);
+}
 
 fs.readdir('./commands/', (err, files) => {
     if (err) return console.error(err);
@@ -20,12 +27,16 @@ fs.readdir('./commands/', (err, files) => {
     const commandArray = [];
     commandFiles.forEach((commandName) => {
         const command = require('./commands/' + commandName);
-        client.commands.set(command.name, command);
+        for (const client of clients) {
+            client.commands.set(command.name, command);
+        }
         commandArray.push(command);
     });
-    client.once('ready', () => {
-        client.guilds.cache.get(ID.serwer).commands.set(commandArray);
-    });
+    for (const client of clients) {
+        client.once('ready', () => {
+            client.guilds.cache.get(ID.serwer).commands.set(commandArray);
+        });
+    }
 });
 
 fs.readdir('./events/', (err, files) => {
@@ -34,11 +45,15 @@ fs.readdir('./events/', (err, files) => {
     if (eventFiles.length <= 0) return console.log('Katalog /envents/ jest pusty!');
     eventFiles.forEach((eventName) => {
         const event = require('./events/' + eventName);
-        if (event.once)
-            client.once(event.name, async (...args) => event.run(client, ...args));
-        else
-            client.on(event.name, async (...args) => event.run(client, ...args));
+        for (const client of clients) {
+            if (event.once)
+                client.once(event.name, async (...args) => event.run(client, ...args));
+            else
+                client.on(event.name, async (...args) => event.run(client, ...args));
+        }
     });
 });
 
-client.login(process.env.TOKEN);
+for (let index = 0; index < tokensAmount; index++) {
+    clients[index].login(process.env['TOKEN_' + (index + 1)]);
+}
