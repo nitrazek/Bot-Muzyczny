@@ -1,6 +1,8 @@
 require('dotenv').config();
 const fs = require('fs');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
+const { DisTube } = require('distube');
+const { SpotifyPlugin } = require('@distube/spotify');
 require('./handlers/antiCrash.js')();
 const ID = require('./config/id.json');
 
@@ -17,6 +19,15 @@ for (let i = 0; i < tokensAmount; i++) {
         ]
     });
     client.commands = new Collection();
+    client.DisTube = new DisTube(client, {
+        emitNewSongOnly: true,
+        savePreviousSongs: false,
+        nsfw: true,
+        emitAddSongWhenCreatingQueue: false,
+        plugins: [new SpotifyPlugin()]
+    });
+
+    require('./handlers/distubeEvents.js')(client);
     clients.push(client);
 }
 

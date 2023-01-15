@@ -1,14 +1,13 @@
 const { Client, CommandInteraction } = require('discord.js');
 
 module.exports = {
-    name: 'hello',
-    description: 'Say hello to bot',
+    name: 'kolejka',
+    description: 'Wyświetla obecną kolejkę piosenek',
     /**
-     * 
      * @param {Client} client 
      * @param {CommandInteraction} interaction 
      */
     async run(client, interaction) {
-        await interaction.reply('Lubie placki :D');
+
     }
 }
