@@ -13,7 +13,7 @@ module.exports = {
             choices: [
                 { name: '🔢 Wyświetlanie kolejki', value: 'show' },
                 { name: '🔁 Zapętlenie kolejki / utworu', value: 'loop' },
-                { name: '🔀 Wymieszanie utowrów w kolejce', value: 'mix' },
+                { name: '🔀 Wymieszanie utworów w kolejce', value: 'mix' },
                 { name: '🔜 Proponowanie kolejnych utworów', value: 'autoplay' }
             ]
         }
@@ -39,11 +39,11 @@ module.exports = {
                     return `**${id === 0 ? 'Teraz' : id}**:  \`${song.name}\` - \`${song.formattedDuration}\``
                 }).join('\n')}\nKolejka bota: *${client.user.username}*`);
             case 'loop':
-                let loopMode = await queue.setRepeatMode(queue);
+                let loopMode = await client.DisTube.setRepeatMode(queue);
                 return Embed(interaction, 'Blue', `🔀 | Ustawiono zapętlenie na: **${loopMode ? loopMode == 2 ? 'kolejkę' : 'piosenkę' : 'wyłączono'}**`);
             case 'mix':
                 await queue.shuffle(voiceChannel);
-                return Embed(interaction, 'Blue', '🔀 | Wymieszano utowry w kolejce');
+                return Embed(interaction, 'Blue', '🔀 | Wymieszano utwory w kolejce');
             case 'autoplay':
                 let autoplayMode = await queue.toggleAutoplay(voiceChannel);
                 return Embed(interaction, 'Blue', `🔀 | Ustawiono proponowanie utworów na: **${autoplayMode ? 'włączone' : 'wyłączone'}**`);

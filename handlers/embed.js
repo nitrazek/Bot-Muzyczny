@@ -1,4 +1,4 @@
-const { EmbedBuilder, CommandInteraction } = require('discord.js');
+const { EmbedBuilder, CommandInteraction, TextBasedChannel } = require('discord.js');
 
 module.exports = {
     /**
@@ -8,6 +8,20 @@ module.exports = {
      */
     Embed(interaction, color, description) {
         interaction.reply({
+            embeds: [
+                new EmbedBuilder()
+                    .setColor(color)
+                    .setDescription(description)
+            ]
+        })
+    },
+    /**
+     * @param {TextBasedChannel} channel 
+     * @param {String} description 
+     * @param {String} color 
+     */
+    channelEmbed(channel, color, description) {
+        channel.send({
             embeds: [
                 new EmbedBuilder()
                     .setColor(color)

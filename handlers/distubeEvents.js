@@ -1,4 +1,5 @@
 const { Client } = require('discord.js');
+const { channelEmbed } = require('./embed');
 
 /**
  * @param {Client} client 
@@ -6,29 +7,56 @@ const { Client } = require('discord.js');
 module.exports = (client) => {
     client.DisTube
         .on('playSong', (queue, song) =>
-            queue.textChannel.send(
-                `▶ | Gramy \`${song.name}\` - \`${song.formattedDuration}\`\nDodana przez: **${song.user.username}**\n${status(queue)}`
+            channelEmbed(
+                queue.textChannel,
+                'Blue',
+                `🎦 | Gramy \`${song.name}\` - \`${song.formattedDuration}\`\nDodana przez: **${song.user.username}**\n${status(queue)}`
             )
         )
         .on('addSong', (queue, song) =>
-            queue.textChannel.send(
+            channelEmbed(
+                queue.textChannel,
+                'Blue',
                 `✅ | Dodano \`${song.name}\` - \`${song.formattedDuration}\` do kolejki, przez **${song.user.username}**`
             )
         )
         .on('addList', (queue, playlist) =>
-            queue.textChannel.send(
+            channelEmbed(
+                queue.textChannel,
+                'Blue',
                 `✅ | Dodano listę \`${playlist.name}\` (${playlist.songs.length} piosenek) do kolejki\n}`
             )
         )
         .on('error', (channel, e) => {
-            if (channel) channel.send(`❌ | Wystąpił błąd...`)
+            if (channel)
+                channelEmbed(
+                    channel,
+                    'Red',
+                    `❌ | Wystąpił błąd...`
+                )
             console.error(e)
         })
-        .on('empty', channel => channel.send('Kanał głosowy jest pusty, opuszczam go...'))
-        .on('searchNoResult', (message, query) =>
-            message.channel.send(`❌ | Nie znaleziono wyników dla: \`${query}\`!`)
+        .on('empty', channel =>
+            channelEmbed(
+                channel,
+                'Purple',
+                'Kanał głosowy jest pusty, opuszczam go... 👋'
+            )
         )
-        .on('finish', queue => queue.textChannel.send('Brak kolejnych piosenek w kolejce, opuszczam kanał...'))
+        .on('searchNoResult', (message, query) =>
+            channelEmbed(
+                message.channel,
+                'Red',
+                `❌ | Nie znaleziono wyników dla: \`${query}\`!`
+            )
+        )
+        .on('finish', queue =>
+            channelEmbed(
+                queue.textChannel,
+                'Purple',
+                'Brak kolejnych piosenek w kolejce, opuszczam kanał... 👋'
+            )
+        )
 }
 
 const status = queue =>

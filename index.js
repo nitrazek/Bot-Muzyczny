@@ -20,6 +20,7 @@ for (let i = 0; i < tokensAmount; i++) {
     });
     client.commands = new Collection();
     client.DisTube = new DisTube(client, {
+        leaveOnFinish: true,
         emitNewSongOnly: true,
         savePreviousSongs: false,
         nsfw: true,
@@ -44,8 +45,9 @@ fs.readdir('./commands/', (err, files) => {
         commandArray.push(command);
     });
     for (const client of clients) {
+        let commandCopy = commandArray;
         client.once('ready', () => {
-            client.guilds.cache.get(ID.serwer).commands.set(commandArray);
+            client.guilds.cache.get(ID.serwer).commands.set(commandCopy);
         });
     }
 });
