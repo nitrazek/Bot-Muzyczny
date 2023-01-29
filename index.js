@@ -37,17 +37,16 @@ fs.readdir('./commands/', (err, files) => {
     const commandFiles = files.filter(file => file.endsWith('.js'));
     if (commandFiles.length <= 0) return console.log('Katalog /commands/ jest pusty!');
     const commandArray = [];
-    commandFiles.forEach((commandName) => {
+    for (const commandName of commandFiles) {
         const command = require('./commands/' + commandName);
         for (const client of clients) {
             client.commands.set(command.name, command);
         }
         commandArray.push(command);
-    });
+    }
     for (const client of clients) {
-        let commandCopy = commandArray;
         client.once('ready', () => {
-            client.guilds.cache.get(ID.serwer).commands.set(commandCopy);
+            client.guilds.cache.get(ID.serwer).commands.set(commandArray);
         });
     }
 });
@@ -56,7 +55,7 @@ fs.readdir('./events/', (err, files) => {
     if (err) return console.error(err);
     const eventFiles = files.filter(file => file.endsWith('.js'));
     if (eventFiles.length <= 0) return console.log('Katalog /envents/ jest pusty!');
-    eventFiles.forEach((eventName) => {
+    for (const eventName of eventFiles) {
         const event = require('./events/' + eventName);
         for (const client of clients) {
             if (event.once)
@@ -64,7 +63,7 @@ fs.readdir('./events/', (err, files) => {
             else
                 client.on(event.name, async (...args) => event.run(client, ...args));
         }
-    });
+    }
 });
 
 for (let index = 0; index < tokensAmount; index++) {
