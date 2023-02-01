@@ -1,4 +1,4 @@
-const { Client, CommandInteraction, ApplicationCommandOptionType } = require('discord.js');
+const { Client, CommandInteraction, ApplicationCommandOptionType, PermissionsBitField } = require('discord.js');
 const { Embed } = require('../handlers/embed');
 
 module.exports = {
@@ -18,6 +18,8 @@ module.exports = {
      */
     async run(client, interaction) {
         try {
+            if (!interaction.member.voice.channel.permissionsFor(client.user).has([PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak]))
+                return Embed(interaction, 'Red', '❌ | Nie mam wystarczających uprawnień do kanału');
             client.DisTube.play(interaction.member.voice.channel, interaction.options.getString('kolejka'), {
                 textChannel: interaction.channel, member: interaction.member
             });
