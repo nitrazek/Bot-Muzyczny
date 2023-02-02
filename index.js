@@ -6,6 +6,7 @@ const { SpotifyPlugin } = require('@distube/spotify');
 require('./handlers/antiCrash.js')();
 const ID = require('./config/id.json');
 
+const globalCommands = true; //Czy rejestrować komendy globalnie
 const clients = [];
 const tokensAmount = parseInt(process.env.COUNT);
 for (let i = 0; i < tokensAmount; i++) {
@@ -46,7 +47,10 @@ fs.readdir('./commands/', (err, files) => {
     }
     for (const client of clients) {
         client.once('ready', () => {
-            client.guilds.cache.get(ID.serwer).commands.set(commandArray);
+            if (globalCommands)
+                client.application.commands.set(commandArray);
+            else
+                client.guilds.cache.get(ID.serwer).commands.set(commandArray);
         });
     }
 });
