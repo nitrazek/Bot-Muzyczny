@@ -35,9 +35,10 @@ module.exports = {
 
         switch (options.getString('ustawienie')) {
             case 'show':
-                return Embed(interaction, 'Blue', `**Aktualna kolejka:**\n${queue.songs.map((song, id) => {
+                const musicList = queue.songs.map((song, id) => {
                     return `**${id === 0 ? 'Teraz' : id}**:  \`${song.name}\` - \`${song.formattedDuration}\``
-                }).join('\n')}\nKolejka bota: *${client.user.username}*`);
+                }).join('\n');
+                return Embed(interaction, 'Blue', `**Aktualna kolejka:**\n${(musicList.length() > 4000) ? musicList.substring(0, 4000) + '\n...' : musicList}\nKolejka bota: *${client.user.username}*`);
             case 'loop':
                 let loopMode = await client.DisTube.setRepeatMode(queue);
                 return Embed(interaction, 'Blue', `🔀 | Ustawiono zapętlenie na: **${loopMode ? loopMode == 2 ? 'kolejkę' : 'piosenkę' : 'wyłączono'}**`);

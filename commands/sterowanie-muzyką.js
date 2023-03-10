@@ -41,6 +41,7 @@ module.exports = {
                 await queue.pause(voiceChannel);
                 return Embed(interaction, 'Blue', '⏸ | Zatrzymano piosenkę');
             case 'skip':
+                if (queue.songs.size() <= 1) return Embed(interaction, 'Red', "❌ | Brak kolejnych utworów w kolejce");
                 await queue.skip(voiceChannel);
                 return Embed(interaction, 'Blue', '⏭ | Pominięto piosenkę');
             case 'quit':
