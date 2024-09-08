@@ -1,10 +1,13 @@
-require('dotenv').config();
-const fs = require('fs');
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { DisTube } = require('distube');
+const { YouTubePlugin } = require('@distube/youtube');
 const { SpotifyPlugin } = require('@distube/spotify');
-require('./handlers/antiCrash.js')();
+const { SoundCloudPlugin } = require('@distube/soundcloud');
+const fs = require('fs');
 const ID = require('./config/id.json');
+const { channel } = require('process');
+require('./handlers/antiCrash.js')();
+require('dotenv').config();
 
 const globalCommands = true; //Czy rejestrować komendy globalnie
 const clients = [];
@@ -19,17 +22,21 @@ for (let i = 0; i < tokensAmount; i++) {
             GatewayIntentBits.GuildEmojisAndStickers
         ]
     });
-    client.commands = new Collection();
+
     client.DisTube = new DisTube(client, {
-        leaveOnFinish: true,
         emitNewSongOnly: true,
-        savePreviousSongs: false,
-        nsfw: true,
         emitAddSongWhenCreatingQueue: false,
-        plugins: [new SpotifyPlugin()]
+        nsfw: true,
+        savePreviousSongs: false,
+        plugins: [
+            new YouTubePlugin(),
+            new SpotifyPlugin(),
+            new SoundCloudPlugin()
+        ],
     });
 
     require('./handlers/distubeEvents.js')(client);
+    client.commands = new Collection();
     clients.push(client);
 }
 

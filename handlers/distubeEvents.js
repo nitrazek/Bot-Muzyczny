@@ -36,13 +36,6 @@ module.exports = (client) => {
                 )
             console.error(e)
         })
-        .on('empty', channel =>
-            channelEmbed(
-                channel,
-                'Purple',
-                'Kanał głosowy jest pusty, opuszczam go... 👋'
-            )
-        )
         .on('searchNoResult', (message, query) =>
             channelEmbed(
                 message.channel,
@@ -50,13 +43,14 @@ module.exports = (client) => {
                 `❌ | Nie znaleziono wyników dla: \`${query}\`!`
             )
         )
-        .on('finish', queue =>
+        .on('finish', queue => {
             channelEmbed(
                 queue.textChannel,
                 'Purple',
                 'Brak kolejnych piosenek w kolejce, opuszczam kanał... 👋'
-            )
-        )
+            );
+            queue.voice.leave();
+        })
 }
 
 const status = queue =>

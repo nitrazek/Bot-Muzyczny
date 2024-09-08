@@ -1,6 +1,5 @@
 {
-  "name": "bot-muzyczny",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {},
@@ -10,11 +9,12 @@
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
     "@discordjs/voice": "^0.17.0",
+    "@distube/soundcloud": "^2.0.3",
     "@distube/spotify": "^2.0.2",
-    "discord.js": "^14.15.3",
+    "@distube/youtube": "^1.0.4",
+    "discord.js": "^14.16.1",
     "distube": "^5.0.2",
     "dotenv": "^16.4.5",
-    "ffmpeg": "^0.0.4",
-    "libsodium-wrappers": "^0.7.13"
+    "sodium-native": "^4.1.1"
   }
 }
